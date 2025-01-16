@@ -11,14 +11,14 @@ const logout = document.querySelector('#logout');
 
 let stompClient = null;
 let nickname = null;
-let fullname = null;
+let fullName = null;
 let selectedUserId = null;
 
 function connect(event) {
     nickname = document.querySelector('#nickname').value.trim();
-    fullname = document.querySelector('#fullname').value.trim();
+    fullName = document.querySelector('#fullname').value.trim();
 
-    if (nickname && fullname) {
+    if (nickname && fullName) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
@@ -30,7 +30,6 @@ function connect(event) {
     event.preventDefault();
 }
 
-
 function onConnected() {
     stompClient.subscribe(`/user/${nickname}/queue/messages`, onMessageReceived);
     stompClient.subscribe(`/user/public`, onMessageReceived);
@@ -38,9 +37,9 @@ function onConnected() {
     // register the connected user
     stompClient.send("/app/user.addUser",
         {},
-        JSON.stringify({nickName: nickname, fullName: fullname, status: 'ONLINE'})
+        JSON.stringify({nickName: nickname, fullName: fullName, status: 'ONLINE'})
     );
-    document.querySelector('#connected-user-fullname').textContent = fullname;
+    document.querySelector('#connected-user-fullname').textContent = fullName;
     findAndDisplayConnectedUsers().then();
 }
 
@@ -128,12 +127,10 @@ async function fetchAndDisplayUserChat() {
     chatArea.scrollTop = chatArea.scrollHeight;
 }
 
-
 function onError() {
     connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color = 'red';
 }
-
 
 function sendMessage(event) {
     const messageContent = messageInput.value.trim();
@@ -151,7 +148,6 @@ function sendMessage(event) {
     chatArea.scrollTop = chatArea.scrollHeight;
     event.preventDefault();
 }
-
 
 async function onMessageReceived(payload) {
     await findAndDisplayConnectedUsers();
@@ -179,7 +175,7 @@ async function onMessageReceived(payload) {
 function onLogout() {
     stompClient.send("/app/user.disconnectUser",
         {},
-        JSON.stringify({nickName: nickname, fullName: fullname, status: 'OFFLINE'})
+        JSON.stringify({nickName: nickname, fullName: fullName, status: 'OFFLINE'})
     );
     window.location.reload();
 }

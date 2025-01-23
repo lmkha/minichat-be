@@ -1,5 +1,7 @@
 package com.example.minichat.user;
 
+import com.example.minichat.utils.response.Response;
+import com.example.minichat.utils.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -35,7 +37,12 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> findConnectedUsers() {
-        return ResponseEntity.ok(userService.findConnectedUsers());
+    public ResponseEntity<Response<List<User>>> findConnectedUsers() {
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Fetched connected users successfully",
+                        userService.findConnectedUsers()
+                )
+        );
     }
 }

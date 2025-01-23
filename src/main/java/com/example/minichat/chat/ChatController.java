@@ -1,5 +1,7 @@
 package com.example.minichat.chat;
 
+import com.example.minichat.utils.response.Response;
+import com.example.minichat.utils.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -32,8 +34,13 @@ public class ChatController {
         );
     }
 
-    @GetMapping("/messages/{senderId}/{recipientId}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderId, @PathVariable String recipientId) {
-        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
-    }
+@GetMapping("/messages/{senderId}/{recipientId}")
+public ResponseEntity<Response<List<ChatMessage>>> findChatMessages(@PathVariable String senderId, @PathVariable String recipientId) {
+    return ResponseEntity.ok(
+            new SuccessResponse<>(
+                    "Fetched chat messages successfully",
+                    chatMessageService.findChatMessages(senderId, recipientId)
+            )
+    );
+}
 }

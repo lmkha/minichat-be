@@ -44,20 +44,30 @@ function onConnected() {
 }
 
 async function findAndDisplayConnectedUsers() {
-    const connectedUsersResponse = await fetch('/users');
-    let connectedUsers = await connectedUsersResponse.json();
-    connectedUsers = connectedUsers.filter(user => user.nickName !== nickname);
-    const connectedUsersList = document.getElementById('connectedUsers');
-    connectedUsersList.innerHTML = '';
+    try {
+        const connectedUsersResponse = await fetch('/users');
+        const response = await connectedUsersResponse.json();
 
-    connectedUsers.forEach(user => {
-        appendUserElement(user, connectedUsersList);
-        if (connectedUsers.indexOf(user) < connectedUsers.length - 1) {
-            const separator = document.createElement('li');
-            separator.classList.add('separator');
-            connectedUsersList.appendChild(separator);
+        if (response.success && Array.isArray(response.data)) {
+            let connectedUsers = response.data.filter(user => user.nickName !== nickname);
+
+            const connectedUsersList = document.getElementById('connectedUsers');
+            connectedUsersList.innerHTML = '';
+
+            connectedUsers.forEach((user, index) => {
+                appendUserElement(user, connectedUsersList);
+                if (index < connectedUsers.length - 1) {
+                    const separator = document.createElement('li');
+                    separator.classList.add('separator');
+                    connectedUsersList.appendChild(separator);
+                }
+            });
+        } else {
+            console.error('Unexpected data format or request failed:', response.message || 'Unknown error');
         }
-    });
+    } catch (error) {
+        console.error('An error occurred while fetching connected users:', error);
+    }
 }
 
 function appendUserElement(user, connectedUsersList) {

@@ -129,9 +129,9 @@ function displayMessage(senderId, content) {
 
 async function fetchAndDisplayUserChat() {
     const userChatResponse = await fetch(`/messages/${nickname}/${selectedUserId}`);
-    const userChat = await userChatResponse.json();
+    const response = await userChatResponse.json();
     chatArea.innerHTML = '';
-    userChat.forEach(chat => {
+    response.data.forEach(chat => {
         displayMessage(chat.senderId, chat.content);
     });
     chatArea.scrollTop = chatArea.scrollHeight;

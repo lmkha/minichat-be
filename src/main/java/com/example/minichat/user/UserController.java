@@ -45,4 +45,14 @@ public class UserController {
                 )
         );
     }
+
+    @GetMapping("/allUsers")
+    public ResponseEntity<Response<List<User>>> findAllUsers() {
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Fetched all users successfully",
+                        userService.findAllUsers()
+                )
+        );
+    }
 }
